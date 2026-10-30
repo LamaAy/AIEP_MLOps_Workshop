@@ -1,0 +1,4 @@
+# Python 3.10+; PyTorch CPU/CUDA/MPS setup may depend on the machine.
+torch>=2.3,<3
+torchvision>=0.18,<1
+numpy>=1.26,<3

@@ -1,0 +1,18 @@
+# Local environments
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.pytest_cache/
+# Downloaded datasets and saved model weights
+data/
+checkpoints/*
+!checkpoints/.gitkeep
+*.pth
+*.pt
+*.ckpt
+# System / editor
+.DS_Store
+.vscode/
+.idea/
