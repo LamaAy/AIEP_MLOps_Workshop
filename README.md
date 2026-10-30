@@ -74,3 +74,7 @@ python predict.py --checkpoint checkpoints/model.pth --index 0
 ## Activity 02 — Experiment Tracking with MLflow
 
 [Open Activity 02](activity_02_mlflow/README.md) — Compare three pretrained CNN checkpoints without retraining.
+
+## Activity 03 — Model Serving with FastAPI
+
+[Open Activity 03](activity_03_fastapi/README.md) — Serve the FashionCNN as a prediction API, test HTTP endpoints, and run inference without retraining.
