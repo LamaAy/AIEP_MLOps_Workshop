@@ -1,0 +1,2 @@
+# Install the repository's root requirements.txt first if PyTorch is not installed.
+mlflow>=2.20,<4

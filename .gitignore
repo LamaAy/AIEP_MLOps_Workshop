@@ -16,3 +16,7 @@ checkpoints/*
 .DS_Store
 .vscode/
 .idea/
+
+# Local MLflow tracking store
+mlruns/
+mlartifacts/

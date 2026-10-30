@@ -72,3 +72,8 @@ python predict.py --checkpoint checkpoints/model.pth --index 0
 ```
 
 
+
+
+## Activity 02 — Experiment Tracking with MLflow
+
+[Open Activity 02](activity_02_mlflow/README.md) — Track FashionCNN runs, compare metrics, and record checkpoints.
