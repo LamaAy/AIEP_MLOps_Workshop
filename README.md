@@ -71,34 +71,4 @@ python evaluate.py --checkpoint checkpoints/model.pth
 python predict.py --checkpoint checkpoints/model.pth --index 0
 ```
 
-## 6. Inspect your checkpoint
-The checkpoint contains `model_state_dict`, `epoch`, `test_accuracy`, and `class_names`. We save weights rather than serializing the entire Python model, so the architecture is defined explicitly in `model.py`. Only load checkpoints from sources you trust.
 
-## 7. Git & GitHub exercise
-```bash
-git status
-git add README.md model.py train.py evaluate.py predict.py requirements.txt .gitignore assets/academy_banner.png
-git commit -m "Complete Lab 01: train and checkpoint a CNN"
-git push origin main
-```
-If the default branch on your fork is not `main`, use its actual branch name instead. **Do not add** `data/`, `.venv/`, or `checkpoints/*.pth`.
-
-### Student tasks
-- [ ] Run training and record your test accuracy.
-- [ ] Change `--epochs` or `--batch-size` and observe the result.
-- [ ] Explain why evaluation must use held-out data.
-- [ ] Reload `model.pth` and make one prediction.
-- [ ] Verify that `git status` does **not** show the dataset or checkpoint.
-- [ ] Push a commit to your fork.
-
-### Submission
-Submit your **GitHub fork URL**, your **test accuracy**, and a short answer to: *Why should model weights and large datasets usually be managed separately from Git source history?*
-
-## Troubleshooting
-- **Slow training?** Reduce epochs or use the smoke-test flags; CPU is supported.
-- **Download fails?** Verify network access to the Fashion-MNIST dataset source.
-- **`ModuleNotFoundError`?** Activate `.venv` and run `pip install -r requirements.txt`.
-- **GPU unavailable?** The scripts automatically use CPU when CUDA/MPS are unavailable.
-
-## Next lab
-Experiment tracking and model versioning with MLflow (separate exercise).
