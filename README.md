@@ -34,7 +34,7 @@ AIEP_MLOps_Workshop/
 ## 1. Fork and clone
 Fork the instructor repository on GitHub, then clone **your fork**:
 ```bash
-git clone https://github.com/YOUR_USERNAME/AIEP_MLOps_Workshop.git
+git clone https://github.com/LamaAy/AIEP_MLOps_Workshop.git
 cd AIEP_MLOps_Workshop
 ```
 If working from the downloaded ZIP instead, extract it and enter the folder.
