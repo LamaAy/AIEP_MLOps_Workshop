@@ -78,3 +78,6 @@ python predict.py --checkpoint checkpoints/model.pth --index 0
 ## Activity 03 — Model Serving with FastAPI
 
 [Open Activity 03](activity_03_fastapi/README.md) — Serve the FashionCNN as a prediction API, test HTTP endpoints, and run inference without retraining.
+
+# Activity 04 — Docker
+[Start Activity 04](activity_04_docker/README.md)
