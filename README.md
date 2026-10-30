@@ -81,3 +81,7 @@ python predict.py --checkpoint checkpoints/model.pth --index 0
 
 # Activity 04 — Docker
 [Start Activity 04](activity_04_docker/README.md)
+
+## Activity 05 — CI with GitHub Actions
+
+[Start Activity 05](activity_05_cicd/README.md) — Automatically test the FastAPI inference service on GitHub.
