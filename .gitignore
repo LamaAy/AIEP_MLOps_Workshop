@@ -20,3 +20,7 @@ checkpoints/*
 # Local MLflow tracking store
 mlruns/
 mlartifacts/
+
+# MLflow local database
+mlflow.db
+mlflow.db-*
