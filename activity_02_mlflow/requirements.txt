@@ -1,2 +1,2 @@
-# Install the repository's root requirements.txt first if PyTorch is not installed.
-mlflow>=2.20,<4
+mlflow>=3.0,<4
+scikit-learn>=1.4

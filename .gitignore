@@ -24,3 +24,6 @@ mlartifacts/
 # MLflow local database
 mlflow.db
 mlflow.db-*
+
+checkpoints/
+activity_01_training/data/
