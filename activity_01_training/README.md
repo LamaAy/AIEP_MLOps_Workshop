@@ -1,83 +1,87 @@
-# Activity 01 — Deep Learning Model Training
+# Activity 01 — Train and Save Five CNN Experiments
 
-## Objective
+Train five **real, distinct Fashion-MNIST CNN models** with PyTorch. The models share the same architecture and dataset, but use different learning rates, batch sizes or training epochs. Each trained checkpoint will be reused by Activity 02 — **no retraining in Activity 02**.
 
-Train a Convolutional Neural Network (CNN) using PyTorch, evaluate its performance, save the trained model, and reload it for inference.
+## Learning goals
+- Train, evaluate, save and reload a model.
+- Observe the effects of learning rate, batch size and epoch count.
+- Save model weights and experiment metadata to `.pth` checkpoints.
+- Create five model checkpoints for MLflow comparison.
 
-## Dataset
+## 1. Setup
+Run from the repository root (`AIEP_MLOps_Workshop/`):
 
-**Fashion-MNIST** — A dataset of 70,000 grayscale images across 10 clothing categories.
+```bash
+python -m pip install -r requirements.txt
+```
 
-## Tasks
+On machines with limited disk space, use an appropriate **CPU-only PyTorch build** following the [official installer](https://pytorch.org/get-started/locally/) instead of inadvertently downloading multiple large CUDA packages.
 
-1. Load and preprocess the Fashion-MNIST dataset.
-2. Build and train a CNN using PyTorch.
-3. Evaluate the model on the test dataset.
-4. **Save the trained model as a `.pth` checkpoint.**
-5. Reload the saved model and evaluate it.
-6. Run inference on a sample image.
+## 2. Train the five experiments
 
-## 1. Train and Save the Model
+```bash
+python activity_01_training/train_five.py
+```
 
-Run from the repository root:
+| Experiment | Epochs | Batch size | Learning rate | What changes? |
+|---|---:|---:|---:|---|
+| `cnn_01_baseline` | 2 | 128 | 0.001 | Baseline |
+| `cnn_02_low_lr` | 2 | 128 | 0.0003 | Lower learning rate |
+| `cnn_03_high_lr` | 2 | 128 | 0.003 | Higher learning rate |
+| `cnn_04_small_batch` | 2 | 64 | 0.001 | Smaller batch |
+| `cnn_05_longer_train` | 4 | 128 | 0.001 | More epochs |
+
+All experiments use seed `42`, Adam and the same FashionCNN architecture. Runs train sequentially; the first run downloads the dataset if needed.
+
+**Saved outputs:**
+
+```text
+checkpoints/
+├── model.pth                       # optional single-model checkpoint for Activities 03/04
+└── activity_02/
+    ├── cnn_01_baseline.pth
+    ├── cnn_02_low_lr.pth
+    ├── cnn_03_high_lr.pth
+    ├── cnn_04_small_batch.pth
+    └── cnn_05_longer_train.pth
+```
+
+Each `.pth` file includes trained weights, epoch count, hyperparameters, class names and test accuracy. Do not commit checkpoints to GitHub.
+
+## 3. Check the five checkpoints
+
+```bash
+ls -lh checkpoints/activity_02/*.pth
+```
+
+## 4. Evaluate and predict with one checkpoint
+
+```bash
+python activity_01_training/evaluate.py --checkpoint checkpoints/activity_02/cnn_01_baseline.pth
+python activity_01_training/predict.py --checkpoint checkpoints/activity_02/cnn_01_baseline.pth --index 0
+```
+
+## 5. Optional: smoke test (not for comparing models)
+
+```bash
+python activity_01_training/train_five.py --max-train-batches 3 --max-test-batches 2
+```
+
+**Warning:** This writes five *incompletely trained* checkpoints to the same paths. After a smoke test, rerun the normal `train_five.py` command before Activity 02.
+
+## 6. Optional: single-model training for API and Docker
 
 ```bash
 python activity_01_training/train.py --epochs 2 --batch-size 128
 ```
 
-The script will automatically:
+This produces `checkpoints/model.pth`, which Activities 03 and 04 expect. The five comparison checkpoints do not replace this path automatically.
 
-- Download Fashion-MNIST if necessary.
-- Train the CNN for 2 epochs.
-- Evaluate the trained model.
-- Save the checkpoint to `checkpoints/model.pth`.
+## Student questions
+1. Why is it important to change one hyperparameter at a time?
+2. Which checkpoint has the lowest test loss and the highest accuracy?
+3. Why can a higher learning rate hurt or help training?
+4. What is saved in `model_state_dict`? What is not saved?
+5. Why should these checkpoints be kept outside Git?
 
-The saved checkpoint contains the model's learned weights, training epoch, test accuracy, and class names.
-
-## 2. Verify the Saved Checkpoint
-
-Check that the model file was created:
-
-```bash
-ls -lh checkpoints/model.pth
-```
-
-The checkpoint can now be reused without training the model again.
-
-## 3. Reload and Evaluate
-
-```bash
-python activity_01_training/evaluate.py --checkpoint checkpoints/model.pth
-```
-
-This loads the saved weights and evaluates the model on the test dataset.
-
-## 4. Run Inference
-
-```bash
-python activity_01_training/predict.py --checkpoint checkpoints/model.pth --index 0
-```
-
-The script predicts the clothing category of one Fashion-MNIST image.
-
-## 5. Student Questions
-
-1. What is the difference between model training and inference?
-2. What information is stored inside a `.pth` checkpoint?
-3. Why do we save a trained model instead of retraining it every time?
-4. What is the purpose of `model.eval()`?
-5. What is the difference between saving a model and exporting it to ONNX?
-
-## Expected Results
-
-By the end of this activity, you should have:
-
-- A trained Fashion-MNIST CNN.
-- Test accuracy results.
-- A saved checkpoint at `checkpoints/model.pth`.
-- A successful evaluation using the saved checkpoint.
-- A prediction on a sample test image.
-
-**Next: Activity 02 — Experiment Tracking with MLflow**
-
-In Activity 02, you will compare multiple trained checkpoints, log evaluation metrics, and analyze model performance using MLflow.
+**Next:** [Activity 02 — Experiment Tracking with MLflow](../activity_02_mlflow/README.md).

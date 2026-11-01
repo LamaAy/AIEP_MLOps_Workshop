@@ -1,172 +1,78 @@
-# Activity 02 — Experiment Tracking with MLflow
+# Activity 02 — Compare Five Trained Models with MLflow
 
-Compare five trained **Fashion-MNIST CNN models** using MLflow without retraining.
+Load the **five checkpoints produced in Activity 01**, evaluate them on the Fashion-MNIST test split, and log every run to MLflow. **No training happens in this activity.**
 
-## Learning Objectives
+## Learning goals
+- Track and compare five experiments using the same test data.
+- Interpret class-level and aggregate classification metrics.
+- Inspect confusion matrices, probability calibration, and latency.
+- Compare hyperparameters against test results in the MLflow UI.
 
-By the end of this activity, you will be able to:
-
-1. Track machine learning experiments using MLflow.
-2. Load and evaluate saved model checkpoints.
-3. Compare accuracy, loss, precision, recall, F1-score, and inference latency.
-4. Analyze confusion matrices and per-class performance.
-5. Identify the best-performing model using evaluation metrics.
-
-## 1. Setup
-
-Open a terminal (**Terminal 1**) and navigate to the repository root:
+## 1. Install dependencies
+Run from the **repository root**:
 
 ```bash
-cd ~/AIEP_MLOps_Workshop
-```
-
-Activate your virtual environment:
-
-```bash
-source .venv/bin/activate
-```
-
-Install the required dependencies:
-
-```bash
-python -m pip install -r requirements.txt
 python -m pip install -r activity_02_mlflow/requirements.txt
 ```
 
-## 2. Verify Saved Checkpoints
+Make sure `torch`, `torchvision`, and `numpy` from Activity 01 are already installed. If not, complete the Activity 01 setup first.
 
-The five models should already have been trained and saved during Activity 01.
-
-Check that the checkpoint directory exists:
+## 2. Check your five saved models
 
 ```bash
-ls -lh checkpoints/activity_02/
+ls -lh checkpoints/activity_02/*.pth
 ```
 
-You should see five `.pth` files corresponding to the five training experiments.
-
-If the files are missing, complete Activity 01 first:
+The directory must contain **exactly five `.pth` files** from Activity 01. If they are missing:
 
 ```bash
 python activity_01_training/train_five.py
 ```
 
-**Note:** Activity 02 does not retrain models. It only loads and evaluates existing checkpoints.
+This is an Activity 01 training command; Activity 02 itself **does not train**.
 
-## 3. Start the MLflow Server — Terminal 1
-
-From the repository root, run:
-
-```bash
-mlflow ui --backend-store-uri sqlite:///mlflow.db --host 127.0.0.1 --port 5001
-```
-
-Keep **Terminal 1 open** while using MLflow.
-
-Open your browser and navigate to:
-
-http://127.0.0.1:5001
-
-Initially, you may see only the **Default** experiment. This is normal before logging any runs.
-
-## 4. Open a New Terminal — Terminal 2
-
-Do not close Terminal 1.
-
-Open a **second terminal window or tab**.
-
-Navigate to the repository:
-
-```bash
-cd ~/AIEP_MLOps_Workshop
-```
-
-Activate the virtual environment:
-
-```bash
-source .venv/bin/activate
-```
-
-Verify the five checkpoints:
-
-```bash
-ls -lh checkpoints/activity_02/
-```
-
-Now run the comparison:
+## 3. Evaluate and log all five runs
 
 ```bash
 python activity_02_mlflow/compare_models.py
 ```
 
-The script will:
+The script reloads each checkpoint and records metrics and artifacts in the local SQLite tracking database `mlflow.db`.
 
-1. Load the five trained CNN checkpoints.
-2. Evaluate each model on Fashion-MNIST.
-3. Calculate performance metrics.
-4. Record the results as separate MLflow runs.
-5. Save evaluation reports and artifacts.
+### Metrics
 
-No training takes place during this step.
+| Category | Logged metrics |
+|---|---|
+| Overall | Accuracy, error rate, balanced accuracy, cross-entropy loss |
+| Precision/recall | Macro and weighted precision/recall/F1; micro F1 |
+| Agreement | Cohen's kappa, Matthews correlation coefficient |
+| Ranking | Top-2 and top-3 accuracy, one-vs-rest ROC-AUC (macro/weighted) |
+| Probabilities | Log loss, multiclass Brier score, 15-bin Expected Calibration Error (ECE), confidence for correct/wrong predictions |
+| Performance | Inference milliseconds/image, throughput (images/second), parameter count |
+| Per class | Precision, recall, F1, specificity and one-vs-rest ROC-AUC for each of 10 classes |
 
-## 5. View and Compare Experiments
+The script also saves **confusion matrix CSV, per-class CSV, calibration CSV, per-example predictions with class probabilities, and classification report JSON** for each run. Inference timing covers **forward-pass execution only**, excludes dataset loading/preprocessing, and varies with device/batch size; it is not a standardized end-to-end benchmark.
 
-Return to your browser and refresh:
+## 4. Start MLflow UI
 
-http://127.0.0.1:5001
-
-Open the experiment:
-
-**FashionMNIST_CNN_Comparison**
-
-You should now see five runs, one for each checkpoint.
-
-Select the runs to compare their metrics.
-
-### Evaluation Metrics
-
-The comparison includes:
-
-- Accuracy and balanced accuracy
-- Cross-entropy loss
-- Precision, recall, and F1-score (macro and weighted)
-- Per-class performance
-- ROC-AUC
-- Cohen's kappa and Matthews correlation coefficient
-- Confidence and calibration metrics
-- Inference latency and throughput
-
-Explore the saved artifacts, including confusion matrices and classification reports.
-
-## 6. Student Questions
-
-1. Which experiment achieves the highest accuracy?
-2. Which model has the highest macro F1-score?
-3. How does changing the learning rate affect model performance?
-4. Does increasing training epochs improve accuracy?
-5. Which classes are most frequently confused?
-6. Does the most accurate model also have the lowest inference latency?
-7. Why should we compare multiple metrics instead of relying on accuracy alone?
-
-## Expected Output
-
-After completing this activity, you should have:
-
-- Five MLflow experiment runs.
-- A comparison of model evaluation metrics.
-- Per-class classification reports.
-- Confusion matrices.
-- Saved checkpoint artifacts.
-- An understanding of how MLflow supports experiment tracking and model comparison.
-
-## 7. Stop MLflow
-
-When finished, return to **Terminal 1** and press:
-
-```text
-Ctrl + C
+```bash
+mlflow ui --backend-store-uri sqlite:///mlflow.db --host 127.0.0.1 --port 5001
 ```
 
-This stops the MLflow server.
+Open **http://127.0.0.1:5001** → **Model training** → **FashionMNIST_CNN_Comparison**. Select five runs and compare metrics and artifacts.
 
-Your experiment results remain saved in the local MLflow tracking database.
+## 5. Review the exported summary
+
+```bash
+ls -lh checkpoints/activity_02_summary.csv
+```
+
+## Student questions
+1. Which run achieves the highest accuracy and which achieves the highest macro F1?
+2. Do precision, recall and F1 tell the same story for `Shirt` and `T-shirt/top`?
+3. Does longer training guarantee the best loss, accuracy or calibration?
+4. Why does test accuracy not tell us whether a model's probabilities are well calibrated?
+5. Why might inference latency differ between CPU and GPU?
+6. Are these five models architecturally different, or do their training configurations differ?
+
+**Expected result:** Five MLflow runs, dozens of scalar metrics per run, ten-class metrics and structured evaluation artifacts. No retraining.
