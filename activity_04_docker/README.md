@@ -29,7 +29,7 @@ The first build downloads and installs CPU-only PyTorch and may take a while.
 docker run --rm --name fashion-cnn-lab04 -p 8001:8000 fashion-cnn-api:lab04
 ```
 
-Port **8001** on the host maps to port **8000** in the container; this avoids conflicts with your Activity 03 server.
+Port **8001** on the host maps to port **8000** in the container; this avoids conflicts with  Activity 03 server.
 
 ## 3. Test the API
 
